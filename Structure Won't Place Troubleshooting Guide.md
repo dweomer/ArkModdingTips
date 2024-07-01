@@ -19,6 +19,8 @@ As of 4-23-24, the ModDataAsset bug reported by Quellcrest is still there. Meani
 
 Note: From some of the testing I’ve done recently I now believe the snap array on the alternate structure has to match up with the primary structure. Even inserting one snap point at the beginning on the alternate structure seems to be enough to break its ability to place.
 
+Note2: Additional testing and recent issues led me to discover that not only do the snap arrays have to be in sync, their point location offsets have to be the same. It's entirely possible other settings have to match, such as Point Rot Offset, Point Scale Offset. I haven't tested those. I do know that the Attach To and Attach From bools can be different values.
+
 6. Check Placement Encroachment settings. Sometimes even if the encroachment boxes are green in debugstructures mode, the structure won’t place. I had this issue with my “short” doors, and I had to shrink the vertical extent of the encroachment boxes before the doors would actually place, even though the boxes were all green.
 
 7. Snap Range settings (MaxSnapLocRange and SnapOverlapCheckRadius). Sometimes even if the structure is snapping where you want and the preview mesh is green, you have to fiddle with one of these settings (increase range). Try one then the other. I forget which one does what.

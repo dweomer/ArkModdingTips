@@ -106,8 +106,13 @@ Concepts:
 11. Allow Snap Rotation (and Point Rotation Offset)
    - Allow Snap Rotation: if checked, will make it so this structure is always allowed to be rotated by the rotation values of snap points. When snapping to any structure. All the time. This setting must be configured in the placing structure for it to do anything.
    - Allow Snap Rotation to Structures with Tag: allows you to enable rotation in more controlled, specific snap situations instead of "all the time". This setting must be configured in the placing structure for it to do anything.
+   - Force Allow Snap Rotation to Structures with Tag: allows you to enable rotation in more controlled, specific snap situations instead of "all the time". This setting must be configured in the placed structure for it to do anything. This setting comes in handy if you had to change your Structure Tag for some reason, but still need snap rotation to work with existing parts from vanilla or other mods. You can add the tags for the vanilla parts to this "force array" and it will force the vanilla parts to rotate when snapping to your structure, even if they don't have the tag in their "Allow" array.
    - Point Rot Offset: a setting inside snap points. Affects both FROM and TO snaps, but only if the placing structure has Allow Snap Rotation set up correctly.
    - Example: On a square ceiling, "Allow Snap Rotation to Structures with Tag" is set include the "TriangleCeiling" structure tag. When a square ceiling is in placement mode, snapping to a triangle ceiling, the rotation value of the FROM snap on the square ceiling will rotate the square ceiling, pivoting the square ceiling *around the point where the FROM snap meets the TO snap of the Triangle ceiling*. At the same time, the rotation value of the TO snap on the triangle ceiling will ALSO rotate the square ceiling. This means you have to add the rotation values of the FROM and TO snaps to know how much the square ceiling will actually be rotated.
+
+12. Structure Tag and Secondary Structure Tags
+    - Structure Tag is a label you give to a set of structure parts of the same shape (for example Floor_Triangle, or Wall_Sloped_Left). The Structure Tag is checked by at least 3 systems in the game, maybe more: Snap point Inclusions/Exclusions, Allow Snap Rotation for Tags (and the "Force" version), and the new structure skin system (that's how Frontier knows what model to use when you place it on a part. It checks the Structure Tag).
+    - Secondary Structure Tags, as far as I know, are only checked by the Snap Point Inclusion/Exclusion arrays. So if for some reason you need a structure to have multiple Structure Tags for the purposes of snap point inclusion/exclusion, you can put the extra tags in this array.
 
 --------------------------------
 
@@ -122,22 +127,22 @@ When you equip a structure to place, the snap system immediately starts running 
 
 - Snap Type Flags - The Snap Type Flag of the preview structure will be compared to the "To Point Snap Type Flags" value in the TO snap points of every nearby placed structure, to see if if there is a match (remember it's comparing bits). If no matches are found within a placed structure, you won't see any blue DebugStructure spheres on that placed structure, and your preview structure will be unable to snap to it.
 
-- Extra Snap Type Flags - New to ASA. The X value of the preview structure will be compared to the X value found in the TO snap points of every nearby placed structure. The Y values will be compared and the Z values will be compared. Something I haven't taken time to nail down yet is whether these comparisons are treated as an AND or and OR situation. For example does X, Y, AND Z have to match or does X, Y, OR Z have to match? I'll update this later once I take time to play with that and figure it out.
+- Extra Snap Type Flags - New to ASA. The X value of the FROM snaps in the preview structure will be compared to the X value found in the TO snaps of every nearby placed structure. The Y values will be compared, and the Z values will be compared. From what I can tell, ALL snap type flags have to find a match. If the value is Zero, it means it will always match. So even if one structure has an Extra Snap Type Flag X value of 4, but the other structure has an X value of zero, it will still match.
 
 - Snap Point Match Group - if the above checks were passed, then the TO snap points on the placed structure get compared to the FROM snap points on the preview structure. If a TO snap and a FROM snap have a matching Snap Point Match Group value (remember it's comparing bits), then it proceeds to the final step. If no matches are found, I'm pretty sure the blue DebugStructure spheres don't show up (would need to test that to remind myself).
 
-- Extra Snap Point Match Group - same as above but runs through the X, Y, and Z values, comparing X to X, Y to Y, Z to Z. Again, I'm not sure if it's AND or OR when it comes to finding a match. I need to test it.
+- Extra Snap Point Match Group - same as above but runs through the X, Y, and Z values, comparing X to X, Y to Y, Z to Z. Again, each one has to match, and Zero means it will always match.
 
 - Snap Point Inclusions and Exclusions
 
    Inclusions
-   - If a TO snap includes a class or tag, then the *preview structure* must be a child of that class or have that tag. 
-   - If a FROM snap includes a class or tag, then the *placed structure* has to be a child of that class or have that tag. This is true even though the Match Group is the same.
+   - If a TO snap includes a class or structure tag, then the *preview structure* must be a child of that class or have that tag. 
+   - If a FROM snap includes a class or structure tag, then the *placed structure* has to be a child of that class or have that tag. This is true even though the Match Group is the same.
 
    Exclusions
    - If a TO snap excludes a Snap Type Flag, then the *preview structure* can't be using that Snap Type Flag. Pretty sure if even one bit is a match during the bitmask process, it will be excluded.
-   - If a TO snap excludes a class or tag, then the *preview structure* can't be a child of that class or have that tag.
-   - If a FROM snap excludes a class or tag, then the *placed structure* can't be a child of that class or have that tag. Again, this is true even though the Match Group is the same.
+   - If a TO snap excludes a class or structure tag, then the *preview structure* can't be a child of that class or have that tag.
+   - If a FROM snap excludes a class or structure tag, then the *placed structure* can't be a child of that class or have that tag. Again, this is true even though the Match Group is the same.
 
    If you're testing in the devkit and using DebugStructures, I'm pretty sure the blue DebugStructure spheres will show up during this stage, even if the inclusions/exclusions are preventing a snap from happening.
 
@@ -145,7 +150,7 @@ When you equip a structure to place, the snap system immediately starts running 
  
  At this time the Point Location Offset, Rotation, etc values will dictate the position and orientation of the preview structure.
  
- During the placement process, the "Allowed To Build" function runs on tick on client, which is what turns the preview structure Red or Green and displays messages to the player to indicate if the structure can actually be placed there. That function will also run once on server when the structure attempts to place. As far as I know it does not by default influence snap rules. It's more related to placement rules, like preventing placement inside terrain or other structures (Obstructed), too close to an enemy base, too high above ground, etc.
+ During the placement process, the "Allowed To Build" function runs on tick on client, which is part of the logic turns the preview structure Red or Green and displays messages to the player to indicate if the structure can actually be placed there. That function will also run once on server when the structure attempts to place. As far as I know it does not by default influence snap rules. It's more related to placement rules, like preventing placement inside terrain or other structures (Obstructed), too close to an enemy base, too high above ground, etc.
 
 --------------------------------
 Troubleshooting:
