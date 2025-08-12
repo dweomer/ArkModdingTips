@@ -5,6 +5,8 @@ My goal here is to provide a basic understanding of snap points and how the snap
 
 I recommend looking at a structure while reading this and finding each thing I'm talking about. Perhaps later I will add pictures to the guide.
 
+There are links at the bottom of the page to check out, as well.
+
 --------------------------------
 
 Tips:
@@ -252,6 +254,10 @@ https://www.rapidtables.com/convert/number/decimal-to-binary.html?x=64
 
 Documentation of most of the snap flags and match groups in Ark Survival Ascended, courtesy of Orionsun:
 
-https://docs.google.com/document/d/e/2PACX-1vTa2FzbYhjtDwJoDbIjTd1bMNUOvhj9zn38GyGTV7pVVMq7sWHRJAkP84oGSk8-Q18iRTXz8KwoStEt/pub
+https://devkit.studiowildcard.com/guides/structure-types
 
-https://docs.google.com/document/d/e/2PACX-1vRmUGRfb3knh8s0OB6tRElZO_xvGu8ykqF4hPZTecULJWdnhhSwWSQqDKFtLJsVcYTf_LqooX3HDRCT/pub
+https://devkit.studiowildcard.com/guides/snap-groups
+
+Additional info on snapping, with some explanations of how PlacementMaxRange and SnapCheckOverlapRadius work:
+
+https://devkit.studiowildcard.com/guides/snapping-updates
